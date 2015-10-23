@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-4">
+    <h2 class="text-center">Les meilleurs Faker</h2><br>
+    {% for bestQuote in bestQuotes %}
+      <h3 class="text-center">{{bestQuote.title}}</h3>
+      <p>{{bestQuote.content}}</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <p class="pull-left"> Author : {{bestQuote.author}}</p>
+        </div>
+        <div class="col-sm-6">
+          <p class="pull-right"> Date : {{bestQuote.createdAt|date("d/m/Y")}}</p>
+        </div>
+      </div>
+      <div class="pull-right">
+        <div class="row">
+          <div class="col-sm-3">
+            <a href="{{path("voteup", {id: bestQuote.id})}}"><i class="fa fa-thumbs-o-up"></i></a>
+          </div>
+          <div class="col-sm-3">
+            <p>{{bestQuote.upVote}}</p>
+          </div>
+          <div class="col-sm-3">
+            <a href="{{path("votedown", {id: bestQuote.id})}}"><i class="fa fa-thumbs-o-down"></i></a>
+          </div>
+          <div class="col-sm-3">
+            <p>{{bestQuote.downVote}}</p>
+          </div>
+        </div>
+      </div>
+
+      <br><br>
+      <hr>
+    {% endfor %}
+  </div>
+
+
+  </div>
+
+  <div class="col-sm-1"></div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4"></div>
+
+      <div class="col-sm-4">
+        <h2 class="text-center">Quotes du jour</h2><br>
+        {% for quote in quotes %}
+          <h3 class="text-center"><a href="{{path("id", {id: quote.id})}}">{{quote.title}}</a></h3>
+          <div class="backgroundblue">
+          <p>{{quote.content}}</p>
+        </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="infobulle">
+              <p class="pull-left"> Author : <a href="{{path("author", {author: quote.author})}}">{{quote.author}}</a></p>
+
+            </div>
+            </div>
+            <div class="col-sm-6">
+              <p class="pull-right"> Date : {{quote.createdAt|date("d/m/Y H:i")}}</p>
+            </div>
+          </div>
+          <p class="pull-left"> Catégorie : <a href="{{path("categorie", {categorie: quote.author})}}">{{quote.author}}</a></p>
+          <div class="pull-right">
+            <div class="row">
+              <div class="col-sm-3">
+                <a href="{{path("voteup", {id: quote.id})}}"><i class="fa fa-thumbs-o-up"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.upVote}}</p>
+              </div>
+              <div class="col-sm-3">
+                <a href="{{path("votedown", {id: quote.id})}}"><i class="fa fa-thumbs-o-down"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.downVote}}</p>
+              </div>
+            </div>
+          </div>
+
+          <br><br>
+          <hr>
+        {% endfor %}
+
+      </div>
+
+      <div class="col-sm-4"></div>
+    </div>
+
+
+
+  </div>
+
+{% endblock %}

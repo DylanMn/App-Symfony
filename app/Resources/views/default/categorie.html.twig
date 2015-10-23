@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+      {% for quote in laCategorie %}
+
+        <h2 class="text-center">{{quote.categorie}}</h2><br>
+          <h3 class="text-center">{{quote.title}}</h3>
+          <div class="backgroundblue">
+          <p>{{quote.content}}</p>
+        </div>
+          <div class="row">
+            <div class="col-sm-6">
+            <p class="pull-left"> Author : {{quote.author}}</p>
+            </div>
+            <div class="col-sm-6">
+              <p class="pull-right"> Date : {{quote.createdAt|date("d/m/Y H:i")}}</p>
+            </div>
+          </div>
+          <div class="pull-right">
+            <div class="row">
+              <div class="col-sm-3">
+                <a href="{{path("voteup", {id: quote.id})}}"><i class="fa fa-thumbs-o-up"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.upVote}}</p>
+              </div>
+              <div class="col-sm-3">
+                <a href="{{path("votedown", {id: quote.id})}}"><i class="fa fa-thumbs-o-down"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.downVote}}</p>
+              </div>
+            </div>
+          </div>
+
+          <br><br>
+          <hr>
+          {% else %}
+          <h2>Aucune quote pour l'instant :(</h2>
+          <p class="bs-component">
+            <a href="/new" class="btn btn-primary btn-md"><i class="fa fa-pencil-square-o fa-1x"></i> Créer une quote</a>
+            <a href="/" class="btn btn-primary btn-md">Retour</a>
+          </p>
+            {% endfor %}
+
+
+
+      </div>
+
+      <div class="col-sm-4"></div>
+    </div>
+
+
+
+
+
+  </div>
+  {% endblock %}

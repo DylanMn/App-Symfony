@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="row">
+
+  <div class="col-sm-1"></div>
+
+  <div class="col-sm-2"></div>
+
+  <div class="col-sm-4">
+    <h2 class="text-center">Les moins bons Faker</h2><br>
+    {% for worstQuote in worstQuotes %}
+      <h3 class="text-center">{{worstQuote.title}}</h3>
+      <p>{{worstQuote.content}}</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <p class="pull-left"> Author : {{worstQuote.author}}</p>
+        </div>
+        <div class="col-sm-6">
+          <p class="pull-right"> Date : {{worstQuote.createdAt|date("d/m/Y")}}</p>
+        </div>
+      </div>
+      <div class="pull-right">
+        <div class="row">
+          <div class="col-sm-3">
+            <a href="{{path("voteup", {id: worstQuote.id})}}"><i class="fa fa-thumbs-o-up"></i></a>
+          </div>
+          <div class="col-sm-3">
+            <p>{{worstQuote.upVote}}</p>
+          </div>
+          <div class="col-sm-3">
+            <a href="{{path("votedown", {id: worstQuote.id})}}"><i class="fa fa-thumbs-o-down"></i></a>
+          </div>
+          <div class="col-sm-3">
+            <p>{{worstQuote.downVote}}</p>
+          </div>
+        </div>
+      </div>
+
+      <br><br>
+      <hr>
+    {% endfor %}
+  </div>
+
+  <div class="col-sm-1"></div>
+
+</div>
+{% endblock %}

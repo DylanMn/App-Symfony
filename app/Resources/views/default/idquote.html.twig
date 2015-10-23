@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4"></div>
+
+      <div class="col-sm-4">
+
+      {% for quote in quoteunique %}
+        <h2 class="text-center">Quote par : {{quote.author}}</h2><br>
+          <h3 class="text-center">{{quote.title}}</h3>
+          <div class="backgroundblue">
+          <p>{{quote.content}}</p>
+        </div>
+          <div class="row">
+            <div class="col-sm-6">
+            <p class="pull-left"> Author : {{quote.author}}</p>
+            </div>
+            <div class="col-sm-6">
+              <p class="pull-right"> Date : {{quote.createdAt|date("d/m/Y H:i")}}</p>
+            </div>
+          </div>
+          <div class="pull-right">
+            <div class="row">
+              <div class="col-sm-3">
+                <a href="{{path("voteup", {id: quote.id})}}"><i class="fa fa-thumbs-o-up"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.upVote}}</p>
+              </div>
+              <div class="col-sm-3">
+                <a href="{{path("votedown", {id: quote.id})}}"><i class="fa fa-thumbs-o-down"></i></a>
+              </div>
+              <div class="col-sm-3">
+                <p>{{quote.downVote}}</p>
+              </div>
+            </div>
+          </div>
+          <br><br>
+          <hr>
+          <span class='st_facebook_large' displayText='Facebook'></span>
+          <span class='st_twitter_large' displayText='Tweet'></span>
+          <span class='st_email_large' displayText='Email'></span>
+          <p><form action="{{ path('create') }}" method="post" novalidate>
+          {{ form_row(form.title) }} {{ form_row(form.content) }} {{ form_row(form.author) }} <br> {{ form_widget(form.submit)  }}  {{ form_rest(form)  }} </form></p>
+          {% for comment in quote.comments %}
+          <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Par : {{ comment.author }} le {{comment.date|date("d/m/Y H:i")}}</h3>
+                </div>
+                <div class="panel-body">
+                  {{ comment.comment}}
+                </div>
+              </div>
+
+          <hr>
+
+
+        {% endfor %}
+
+        {% endfor %}
+      </div>
+
+      <div class="col-sm-4"></div>
+    </div>
+
+
+
+  </div>
+  {% endblock %}

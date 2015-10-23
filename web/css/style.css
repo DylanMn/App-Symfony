@@ -1,0 +1,61 @@
+
+.backgroundblue {
+  background-color: #0084FF;
+  border-radius: 3px;
+  color: white;
+  border-top-right-radius: 1.3em;
+  border-bottom-right-radius: 1.3em;
+  border-bottom-left-radius: 1.3em;
+  border-top-left-radius: 1.3em;
+  margin: 1px 0;
+  padding: 6px 12px;
+}
+
+form {
+ background-color:#0084FF;
+ padding:10px;
+ width:280px;
+font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+-webkit-font-smoothing: antialiased;
+ }
+
+ input, textarea {
+color: black!important;
+border-color: white;
+border-radius: 5px;
+resize: none;
+width:350px;
+border-style: solid;
+margin-bottom: 10px;
+
+ }
+
+ button {
+   background-color: #0084FF;
+     color: white!important;
+     border-color: white!important;
+     border-style: solid;
+     width: 133%;
+     border-radius: 5px!important;
+     border-width: 1px;
+
+
+
+ }
+
+ label {
+   width: 150px;
+   display: block;
+   float: left;
+
+ }
+
+ select {
+   font-size: 2.5em;
+   width: 350px;
+
+ }
+
+ .infobulle{
+
+ }
