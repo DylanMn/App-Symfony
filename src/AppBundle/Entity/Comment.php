@@ -47,6 +47,12 @@ class Comment
      */
 
     private $fortune;
+
+    public function __construct()
+    {
+      $this->date= new \DateTime();
+    }
+
     /**
      * Get id
      *
@@ -138,7 +144,7 @@ class Comment
      */
     public function setFortune($fortune)
     {
-        $this->author = $fortune;
+        $this->fortune = $fortune;
 
         return $this;
     }

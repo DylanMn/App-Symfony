@@ -14,6 +14,7 @@
           <div class="backgroundblue">
           <p>{{quote.content}}</p>
         </div>
+        <a href="{{path("edit_quote", {id: quote.id})}}"><i class="fa fa-pencil"></i> Editer</a>
           <div class="row">
             <div class="col-sm-6">
             <p class="pull-left"> Author : {{quote.author}}</p>
@@ -36,6 +37,7 @@
               <div class="col-sm-3">
                 <p>{{quote.downVote}}</p>
               </div>
+
             </div>
           </div>
           <br><br>
@@ -43,13 +45,14 @@
           <span class='st_facebook_large' displayText='Facebook'></span>
           <span class='st_twitter_large' displayText='Tweet'></span>
           <span class='st_email_large' displayText='Email'></span>
-          <p><form action="{{ path('create') }}" method="post" novalidate>
-          {{ form_row(form.title) }} {{ form_row(form.content) }} {{ form_row(form.author) }} <br> {{ form_widget(form.submit)  }}  {{ form_rest(form)  }} </form></p>
+          <p><form action="" method="post" novalidate>
+          {{ form_row(form.comment) }} {{ form_row(form.author) }} <br> {{ form_widget(form.submit)  }}  {{ form_rest(form)  }} </form></p>
           {% for comment in quote.comments %}
           <div class="panel panel-primary">
                 <div class="panel-heading">
                   <h3 class="panel-title">Par : {{ comment.author }} le {{comment.date|date("d/m/Y H:i")}}</h3>
                 </div>
+
                 <div class="panel-body">
                   {{ comment.comment}}
                 </div>

@@ -7,14 +7,15 @@ class FortuneRepository extends \Doctrine\ORM\EntityRepository
 {
   public function findLasts() {
       $queryBuilder = $this->createQueryBuilder('F')
+        ->where('F.published = true')
         ->orderBy("F.createdAt","ASC");
         return new DoctrineORMAdapter($queryBuilder);
   }
 
 
   public function findDaily() {
-    $b = new \DateTime('2015-10-23 00:00:00');
-    $e = new \DateTime('2015-10-23 23:59:59');
+    $b = new \DateTime('2015-11-20 00:00:00');
+    $e = new \DateTime('2015-11-20 23:59:59');
     // $c = new \Datetime(("d")+1);
   //$b  = mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"));
   // \dump($c);
@@ -25,7 +26,8 @@ class FortuneRepository extends \Doctrine\ORM\EntityRepository
         ->orderBy("F.createdAt", "DESC")
         ->setParameter("begin", $b)
         ->setParameter("end", $e)
-        ->where("F.createdAt between :begin AND :end")
+        ->where('F.published = true')
+        ->andwhere("F.createdAt between :begin AND :end")
         ->setMaxResults(10)
         ->getQuery()
         ->getResult();
@@ -33,6 +35,7 @@ class FortuneRepository extends \Doctrine\ORM\EntityRepository
 
   public function bestRated() {
     return $this->createQueryBuilder('F')
+      ->where('F.published = true')
       ->orderBy("F.upVote/F.downVote", "DESC")
       ->setMaxResults(10)
       ->getQuery()
@@ -41,6 +44,7 @@ class FortuneRepository extends \Doctrine\ORM\EntityRepository
 
   public function worstRated() {
     return $this->createQueryBuilder('F')
+      ->where('F.published = true')
       ->orderBy("F.downVote/F.upVote", "DESC")
       ->setMaxResults(10)
       ->getQuery()
@@ -75,7 +79,12 @@ class FortuneRepository extends \Doctrine\ORM\EntityRepository
       ->getResult();
   }
 
-
+  public function findUnpublished() {
+		 $queryBuilder = $this->createQueryBuilder('F')
+			 ->where('F.published = false')
+			 ->orderBy("F.createdAt","DESC");
+		 return new DoctrineORMadapter($queryBuilder);
+	 }
 
 
 

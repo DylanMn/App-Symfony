@@ -83,12 +83,20 @@ class Fortune
      */
     private $comments;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="published", type="boolean")
+     */
+    private $published;
+
 
     public function __construct()
     {
       $this->upVote=0;
       $this->downVote=0;
       $this->createdAt= new \DateTime();
+      $this->published = false;
     }
 
     /**
@@ -274,6 +282,16 @@ class Fortune
         return $this->comments;
     }
 
+    /**
+        * publish
+        *
+        * @return boolean
+        */
+       public function publish()
+       {
+           $this->published = true;
+           return $this;
+       }
 
 
 

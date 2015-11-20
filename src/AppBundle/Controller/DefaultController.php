@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Fortune;
+use AppBundle\Entity\Comment;
 use AppBundle\Form\FortuneType;
 use AppBundle\Form\CommentType;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
@@ -28,7 +29,6 @@ class DefaultController extends Controller
          ));
      }
 
-
     }
 
     /**
@@ -36,32 +36,33 @@ class DefaultController extends Controller
      */
     public function voteUpAction(Request $request, $id)
     {
-
-      if ($this->get('session')->has($id)) {
-      return $this->redirectToRoute('create');
-      }
-
-      $this->get('session')->set($id, "value");
-      $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
-      $quote->voteUp();
-      $this->getDoctrine()->getManager()->Flush();
-      return $this->redirectToRoute("homepage");
-    }
+     if (!$this->get("session")->has("idQuote".$id)) {
+       $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
+       $quote->voteUp();
+       $this->get("session")->set("idQuote".$id, "voteUp");
+       $this->getDoctrine()->getManager()->Flush();
+       return $this->redirect($this->getRequest()->headers->get('referer'));
+     }
+     else {
+       return $this->redirect($this->getRequest()->headers->get('referer'));
+     }
+   }
 
     /**
      * @Route("/votedown/{id}", name="votedown")
      */
-    public function voteDownAction(Request $request, $id)
+     public function voteDownAction(Request $request, $id)
     {
-      if ($this->get('session')->has($id)) {
-      return $this->redirectToRoute('create');
+      if (!$this->get("session")->has("idQuote".$id)) {
+        $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
+        $quote->voteDown();
+        $this->get("session")->set("idQuote".$id, "voteDown");
+        $this->getDoctrine()->getManager()->Flush();
+        return $this->redirect($this->getRequest()->headers->get('referer'));
       }
-
-      $this->get('session')->set($id, "value");
-      $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
-      $quote->voteDown();
-      $this->getDoctrine()->getManager()->Flush();
-      return $this->redirectToRoute("homepage");
+      else {
+        return $this->redirect($this->getRequest()->headers->get('referer'));
+      }
     }
 
     /**
@@ -122,23 +123,27 @@ class DefaultController extends Controller
 
     }
 
+
+
+
     /**
      * @Route("/idquote/{id}", name="id")
      */
 
-    public function showQuote(Request $request, $id)
+    public function showQuoteAction(Request $request, $id)
     {
-      $form = $this->createForm(new Commenttype, new Fortune());
+      $form = $this->createForm(new CommentType, new Comment());
 
       $form->handleRequest($request);
       if ($form->isValid()) {
-      $em = $this->getDoctrine()->getManager();
-      $comment->persist($form->getdata());
-      $comment->setFortune($fortune);
+        $em = $this->getDoctrine()->getManager();
+        $comment = $form->getdata();
+        $fortune = $em->getRepository("AppBundle:Fortune")->find($id);
+        $comment->setFortune($fortune);
 
-      $em->persit($comment);
-      $em->flush();
-      return $this->redirectToRoute('homepage');
+        $em->persist($comment);
+        $em->flush();
+        return $this->redirectToRoute('id', ["id" => $id]);
       }
 
       return $this->render('default/idquote.html.twig', array(
@@ -173,6 +178,74 @@ class DefaultController extends Controller
 
         ));
     }
+
+    /**
+    * @Route("/moderation", name="moderation")
+    */
+   public function moderationAction(Request $request)
+   {
+       $pagerfanta = new pagerfanta($this->getDoctrine()->getRepository("AppBundle:Fortune")->findUnpublished());
+       $pagerfanta->setMaxPerPage(3);
+       $pagerfanta->setCurrentPage($request->get("page", 1));
+       // replace this example code with whatever you need
+       return $this->render('default/moderation.html.twig', array(
+               'quotes' => $pagerfanta,
+               //'quotes' => $this->getDoctrine()->getRepository("AppBundle:Fortune")
+           )
+       );
+   }
+
+
+   /**
+    * @Route("/publish/{id}", name="publish")
+    */
+   public function publishAction($id)
+   {
+       $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
+       $quote->publish();
+       $this->getDoctrine()->getManager()->flush();
+       return $this->redirectToRoute("moderation");
+   }
+   /**
+    * @Route("moderation/{id}/remove/", name="remove")
+    */
+   public function removeAction($id)
+   {
+       $quote = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
+       $em = $this->getDoctrine()->getManager();
+       $em->remove($quote);
+       $em->flush();
+       return $this->redirectToRoute("moderation");
+   }
+
+   /**
+     * @Route("/idquote/{id}/edit/", name="edit_quote")
+     */
+     public function editQuoteAction(Request $request, $id)
+     {
+               $quotes = $this->getDoctrine()->getRepository("AppBundle:Fortune")->find($id);
+               dump($quotes);
+               $form = $this->createForm(new FortuneType, $quotes);
+
+
+               $form->handleRequest($request);
+
+               if ($form->isValid()){
+                 dump($quotes);
+                   $em = $this->getDoctrine()->getManager();
+                   $quote = $form->getData();
+                   $em->persist($quote);
+                   $em->flush();
+                   //return $this->redirectToRoute('quotes', array ('id'=>$quotes->getId()));
+               }
+               dump($quotes->getId());
+               return $this->render('default/editQuote.html.twig', array (
+               'quotes' => $quotes,
+               'form' => $form->createView()
+                   ));
+     }
+
+
 
 
 }

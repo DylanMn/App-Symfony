@@ -171,7 +171,7 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         // id
         if (0 === strpos($pathinfo, '/idquote') && preg_match('#^/idquote/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
-            return $this->mergeDefaults(array_replace($matches, array('_route' => 'id')), array (  '_controller' => 'AppBundle\\Controller\\DefaultController::showQuote',));
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'id')), array (  '_controller' => 'AppBundle\\Controller\\DefaultController::showQuoteAction',));
         }
 
         // categorie
@@ -182,6 +182,34 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         // dailyquote
         if ($pathinfo === '/fresh') {
             return array (  '_controller' => 'AppBundle\\Controller\\DefaultController::showDailyQuote',  '_route' => 'dailyquote',);
+        }
+
+        // moderation
+        if ($pathinfo === '/moderation') {
+            return array (  '_controller' => 'AppBundle\\Controller\\DefaultController::moderationAction',  '_route' => 'moderation',);
+        }
+
+        // publish
+        if (0 === strpos($pathinfo, '/publish') && preg_match('#^/publish/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'publish')), array (  '_controller' => 'AppBundle\\Controller\\DefaultController::publishAction',));
+        }
+
+        // remove
+        if (0 === strpos($pathinfo, '/moderation') && preg_match('#^/moderation/(?P<id>[^/]++)/remove/?$#s', $pathinfo, $matches)) {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'remove');
+            }
+
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'remove')), array (  '_controller' => 'AppBundle\\Controller\\DefaultController::removeAction',));
+        }
+
+        // edit_quote
+        if (0 === strpos($pathinfo, '/idquote') && preg_match('#^/idquote/(?P<id>[^/]++)/edit/?$#s', $pathinfo, $matches)) {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'edit_quote');
+            }
+
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'edit_quote')), array (  '_controller' => 'AppBundle\\Controller\\DefaultController::editQuoteAction',));
         }
 
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
